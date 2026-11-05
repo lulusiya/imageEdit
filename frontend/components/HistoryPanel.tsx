@@ -13,11 +13,7 @@ export function HistoryPanel() {
     <section id="history" className="history-section" aria-labelledby="history-title">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">MY CREATIONS</p>
-          <h2 id="history-title">我的创作</h2>
-          <p className="section-note">
-            进行中的任务会自动轮询；到达终态后立即停止刷新，网络异常不会篡改后端任务状态。
-          </p>
+          <h1 id="history-title">我的创作</h1>
         </div>
         <div className="history-actions">
           {activeCount > 0 && (

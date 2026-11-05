@@ -29,7 +29,7 @@ export function SiteHeader() {
 
         <nav className="site-nav" aria-label="主导航">
           <Link href="/#templates">模板库</Link>
-          <Link href="/#history" className="nav-history">
+          <Link href="/history" className="nav-history">
             我的创作
             {activeCount > 0 && (
               <span className="nav-badge" aria-label={`${activeCount} 个进行中的任务`}>

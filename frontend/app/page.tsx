@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { HistoryPanel } from '../components/HistoryPanel';
 import { TemplateCard } from '../components/TemplateCard';
 import { errorMessage, getCategories, getTemplates, isAbortError } from '../lib/api';
 import type { CategorySummary, TemplateSummary } from '../lib/types';
@@ -132,8 +131,6 @@ export default function HomePage() {
           </div>
         )}
       </section>
-
-      <HistoryPanel />
     </div>
   );
 }

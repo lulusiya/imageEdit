@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createTask, errorMessage, isAbortError, uploadAsset } from '../lib/api';
 import { formatFileSize, mimeTypeLabel } from '../lib/format';
@@ -207,7 +206,6 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
     <div className="workspace">
       <div className="workspace-heading">
         <div>
-          <p className="eyebrow">UPLOAD</p>
           <h2>上传素材</h2>
         </div>
         <span className="workspace-requirement">
@@ -296,7 +294,6 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
           <strong>
             {uploadedCount} / {slots.length} 张素材已就绪
           </strong>
-          <span>提交后可继续停留在本页查看该模板的任务进度</span>
         </div>
         <button
           type="button"
@@ -304,7 +301,7 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
           onClick={() => void handleSubmit()}
           disabled={!canSubmit}
         >
-          {submitting ? '提交中…' : '提交生成任务'}
+          {submitting ? '提交中…' : '开始制作'}
         </button>
       </div>
 
@@ -321,9 +318,6 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
             <p>后台正在按“素材检查 → 模拟生成 → 结果整理”处理，进度会实时刷新。</p>
           </div>
           <div className="submit-success-actions">
-            <Link href="/#history" className="button ghost small">
-              查看全部创作
-            </Link>
             <button
               type="button"
               className="button ghost small"
