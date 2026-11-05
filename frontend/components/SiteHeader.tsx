@@ -24,7 +24,6 @@ export function SiteHeader() {
           </span>
           <span className="brand-text">
             <strong>光影工坊</strong>
-            <small>IMAGE EDIT STUDIO</small>
           </span>
         </Link>
 

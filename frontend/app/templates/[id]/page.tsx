@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { TemplateTasks } from '../../../components/TemplateTasks';
 import { TemplateWorkspace } from '../../../components/TemplateWorkspace';
 import { errorMessage, getTemplate, isAbortError } from '../../../lib/api';
-import { formatFileSize, mimeTypeLabel } from '../../../lib/format';
 import { useIdentity } from '../../../lib/identity';
 import type { TemplateDetail } from '../../../lib/types';
 
@@ -57,50 +56,21 @@ export default function TemplateDetailPage({ params }: { params: { id: string } 
       )}
 
       {template && (
-        <>
-          <header className="detail-heading">
-            <p className="eyebrow">{template.category}</p>
-            <h1>{template.title}</h1>
-            <p>{template.description}</p>
-          </header>
-
-          <div className="detail-layout">
-            <aside className="detail-preview">
-              <figure className="preview-frame">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={template.sampleResultUrl} alt={`${template.title} 示例效果`} />
-                <figcaption className="preview-label">示例效果</figcaption>
-              </figure>
-
-              <dl className="detail-facts">
-                <div>
-                  <dt>所需素材</dt>
-                  <dd>{template.requiredImageCount} 张</dd>
-                </div>
-                <div>
-                  <dt>支持格式</dt>
-                  <dd>{template.acceptedMimeTypes.map(mimeTypeLabel).join(' / ')}</dd>
-                </div>
-                <div>
-                  <dt>单张上限</dt>
-                  <dd>{formatFileSize(template.maxFileSizeBytes)}</dd>
-                </div>
-                <div>
-                  <dt>处理流程</dt>
-                  <dd>检查 → 生成 → 整理</dd>
-                </div>
-              </dl>
-            </aside>
-
-            <section className="detail-workspace" aria-label="素材与任务操作">
+        <div className="detail-layout">
+          <section className="maker-panel">
+            <header className="detail-heading"><h1>{template.title}</h1></header>
+            <figure className="preview-frame">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={template.coverUrl} alt={template.title} />
+            </figure>
+            <p className="template-description">{template.description}</p>
               <TemplateWorkspace
                 key={`${template.id}:${user?.id ?? 'anonymous'}`}
                 detail={template}
               />
-              <TemplateTasks templateId={template.id} />
-            </section>
-          </div>
-        </>
+          </section>
+          <TemplateTasks templateId={template.id} />
+        </div>
       )}
     </div>
   );

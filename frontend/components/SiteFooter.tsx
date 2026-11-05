@@ -10,7 +10,7 @@ export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="site-footer-inner">
-        <p>光影工坊 · 素材制作演示 · 模板与示例图均为本地生成素材</p>
+        <p>光影工坊</p>
         <button
           type="button"
           className="footer-link"

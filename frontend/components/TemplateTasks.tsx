@@ -4,24 +4,22 @@ import { useTaskHistory } from '../lib/taskHistory';
 import { TaskCard } from './TaskCard';
 
 export function TemplateTasks({ templateId }: { templateId: string }) {
-  const { tasks, loading, retry } = useTaskHistory();
+  const { tasks, loading, listError, refresh, retry } = useTaskHistory();
   const related = tasks.filter((entry) => entry.task.templateId === templateId).slice(0, 3);
 
-  if (related.length === 0) {
-    return null;
-  }
 
   return (
     <section className="template-tasks" aria-labelledby="template-tasks-title">
       <div className="section-heading compact">
-        <div>
-          <p className="eyebrow">RECENT JOBS</p>
-          <h2 id="template-tasks-title">本模板的最近任务</h2>
-          <p className="section-note">
-            同一页面内多个任务独立轮询，互不覆盖{loading ? '，正在同步最新状态…' : '。'}
-          </p>
-        </div>
+        <h2 id="template-tasks-title">制作历史</h2>
+        <button className="button ghost small" type="button" onClick={refresh} disabled={loading}>
+          {loading ? '刷新中…' : '刷新'}
+        </button>
       </div>
+      {listError && <p className="banner banner-error" role="alert">{listError}</p>}
+      {!listError && related.length === 0 && (
+        <p className="history-placeholder">{loading ? '正在读取记录…' : '这个模板还没有制作记录'}</p>
+      )}
       <div className="task-list">
         {related.map((entry) => (
           <TaskCard

@@ -658,7 +658,7 @@ docker compose up -d --build --force-recreate
 ## 15. 素材与代码来源
 
 - 业务代码为本项目原创，使用 Next.js、Spring Boot、MyBatis 官方脚手架与库。
-- 模板封面与示例结果：仓库内的 SVG 由本项目自行生成，未使用第三方图片、字体或付费素材。
+- 模板封面使用本地保存的 Unsplash 摄影，来源列于文末。示例结果为项目自行绘制的 SVG。
 - 任务结果：运行时由用户上传图片 + Java2D 动态生成，不使用外部 AI 或图库。
 - 未复用第三方开源业务代码；依赖及版本见 `frontend/package-lock.json` 与 `backend/pom.xml`。
 
@@ -671,3 +671,16 @@ docker compose up -d --build --force-recreate
 ```bash
 git push origin main --tags
 ```
+
+### 模板封面摄影来源
+
+封面使用 Unsplash 摄影，照片内嵌于原有 SVG 地址，运行时从本地读取。示例生成结果沿用项目插画。
+
+- travel-postcard · https://images.unsplash.com/photo-1464822759023-fed622ff2c3b
+- city-skyline · https://images.unsplash.com/photo-1519501025264-65ba15a82390
+- pet-portrait · https://images.unsplash.com/photo-1517849845537-4d257902454a
+- pet-duo · https://images.unsplash.com/photo-1548199973-03cce0bbc87b
+- wedding-invite · https://images.unsplash.com/photo-1519741497674-611481863552
+- anniversary · https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2
+- duo-collage · https://images.unsplash.com/photo-1472396961693-142e6e269027
+- holiday-card · https://images.unsplash.com/photo-1482517967863-00e15c9b44be

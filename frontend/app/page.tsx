@@ -50,43 +50,8 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      <section className="home-hero">
-        <div className="hero-copy-block">
-          <p className="eyebrow">TEMPLATE STUDIO</p>
-          <h1>
-            选一个模板，
-            <span>把照片变成作品。</span>
-          </h1>
-          <p className="hero-description">
-            上传你的素材，提交一个异步生成任务，实时观察“素材检查 → 模拟生成 →
-            结果整理”的完整流水线。任务按身份隔离，刷新页面后仍可恢复历史记录。
-          </p>
-        </div>
-        <ul className="hero-stats" aria-label="站点概览">
-          <li>
-            <strong>{templates?.length ?? totalTemplates ?? '—'}</strong>
-            <span>当前模板</span>
-          </li>
-          <li>
-            <strong>3</strong>
-            <span>处理阶段</span>
-          </li>
-          <li>
-            <strong>2</strong>
-            <span>演示身份</span>
-          </li>
-        </ul>
-      </section>
-
       <section id="templates" className="templates-section" aria-labelledby="templates-title">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">TEMPLATE LIBRARY</p>
-            <h2 id="templates-title">模板库</h2>
-          </div>
-          <p className="section-note">所有模板均为本地生成示例，不依赖外部图片服务。</p>
-        </div>
-
+        <h1 id="templates-title">模板库</h1>
         <div className="category-bar" role="group" aria-label="按分类筛选模板">
           <button
             type="button"
