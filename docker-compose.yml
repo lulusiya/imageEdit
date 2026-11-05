@@ -1,0 +1,68 @@
+name: image-edit
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_pass}
+      MYSQL_DATABASE: image_edit
+      MYSQL_USER: imageedit
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-imageedit_pass}
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "127.0.0.1:3307:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 30s
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/image_edit?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+      DB_USERNAME: imageedit
+      DB_PASSWORD: ${MYSQL_PASSWORD:-imageedit_pass}
+      APP_STORAGE_ROOT: /app/data
+      RECOVER_INTERRUPTED_TASKS: "true"
+      SIM_CHECK_DELAY_MS: ${SIM_CHECK_DELAY_MS:-1200}
+      SIM_GENERATE_DELAY_MS: ${SIM_GENERATE_DELAY_MS:-2000}
+      SIM_FINALIZE_DELAY_MS: ${SIM_FINALIZE_DELAY_MS:-1200}
+      SIM_FAIL_STAGE: ${SIM_FAIL_STAGE:-}
+      TZ: Asia/Shanghai
+    volumes:
+      - media-data:/app/data
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        BACKEND_URL: http://backend:8080
+    environment:
+      NODE_ENV: production
+      TZ: Asia/Shanghai
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
+  media-data:
