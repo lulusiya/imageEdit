@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoying.imageedit.mapper.TaskMapper">
+
+    <sql id="taskColumns">
+        t.id, t.owner_id, t.template_id, t.status, t.stage, t.result_key,
+        t.failure_reason, t.check_delay_ms, t.generate_delay_ms, t.finalize_delay_ms,
+        t.fail_stage, t.created_at, t.updated_at,
+        tp.title AS template_title, tp.result_caption, tp.accent_color,
+        tp.required_image_count, tp.accepted_mime_types, tp.max_file_size_bytes
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO task (owner_id, template_id, status, stage, result_key, failure_reason,
+                          check_delay_ms, generate_delay_ms, finalize_delay_ms, fail_stage,
+                          created_at, updated_at)
+        VALUES (#{ownerId}, #{templateId}, #{status}, #{stage}, #{resultKey}, #{failureReason},
+                #{checkDelayMs}, #{generateDelayMs}, #{finalizeDelayMs}, #{failStage},
+                #{createdAt}, #{updatedAt})
+    </insert>
+
+    <insert id="insertTaskAsset">
+        INSERT INTO task_asset (task_id, slot_index, asset_id)
+        VALUES (#{taskId}, #{slotIndex}, #{assetId})
+    </insert>
+
+    <select id="findById" resultType="com.xiaoying.imageedit.domain.Task">
+        SELECT <include refid="taskColumns"/>
+        FROM task t
+        JOIN template tp ON tp.id = t.template_id
+        WHERE t.id = #{id}
+    </select>
+
+    <select id="findByIdAndOwner" resultType="com.xiaoying.imageedit.domain.Task">
+        SELECT <include refid="taskColumns"/>
+        FROM task t
+        JOIN template tp ON tp.id = t.template_id
+        WHERE t.id = #{id} AND t.owner_id = #{ownerId}
+    </select>
+
+    <select id="findByOwner" resultType="com.xiaoying.imageedit.domain.Task">
+        SELECT <include refid="taskColumns"/>
+        FROM task t
+        JOIN template tp ON tp.id = t.template_id
+        WHERE t.owner_id = #{ownerId}
+        ORDER BY t.created_at DESC, t.id DESC
+        LIMIT 200
+    </select>
+
+    <select id="findAssetsForTask" resultType="com.xiaoying.imageedit.domain.Asset">
+        SELECT a.id, a.owner_id, a.template_id, a.original_name, a.storage_key,
+               a.content_type, a.size_bytes, a.created_at
+        FROM asset a
+        JOIN task_asset ta ON ta.asset_id = a.id
+        WHERE ta.task_id = #{taskId}
+        ORDER BY ta.slot_index ASC
+    </select>
+
+    <update id="updateStage">
+        UPDATE task
+        SET status = 'RUNNING', stage = #{stage}, updated_at = CURRENT_TIMESTAMP(3)
+        WHERE id = #{id} AND status IN ('QUEUED', 'RUNNING')
+    </update>
+
+    <update id="markSucceeded">
+        UPDATE task
+        SET status = 'SUCCEEDED', stage = 'FINALIZE', result_key = #{resultKey},
+            failure_reason = NULL, updated_at = CURRENT_TIMESTAMP(3)
+        WHERE id = #{id} AND status &lt;&gt; 'SUCCEEDED'
+    </update>
+
+    <update id="markFailed">
+        UPDATE task
+        SET status = 'FAILED', stage = #{stage}, failure_reason = #{reason},
+            updated_at = CURRENT_TIMESTAMP(3)
+        WHERE id = #{id} AND status &lt;&gt; 'SUCCEEDED'
+    </update>
+
+    <update id="failInterrupted">
+        UPDATE task
+        SET status = 'FAILED', failure_reason = #{reason}, updated_at = CURRENT_TIMESTAMP(3)
+        WHERE status IN ('QUEUED', 'RUNNING')
+    </update>
+
+</mapper>

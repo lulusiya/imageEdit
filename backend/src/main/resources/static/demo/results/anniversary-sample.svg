@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="周年纪念成品示例">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#241b2b"/>
+      <stop offset="1" stop-color="#0b080e"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="400" cy="300" r="270" fill="#c9a7d9" opacity="0.05"/>
+  <rect x="60" y="60" width="12" height="46" rx="6" fill="#c9a7d9"/>
+  <text x="90" y="92" font-family="'Segoe UI',sans-serif" font-size="28" font-weight="700" fill="#f3e9f7">ANNIVERSARY</text>
+  <text x="90" y="122" font-family="'Segoe UI',sans-serif" font-size="13" letter-spacing="3" fill="#c9a7d9">SAMPLE RESULT · 1 IMAGE</text>
+  <rect x="60" y="160" width="680" height="320" rx="16" fill="#c9a7d9" opacity="0.09"/>
+  <rect x="60" y="160" width="680" height="320" rx="16" fill="none" stroke="#c9a7d9" stroke-opacity="0.55" stroke-dasharray="7 7"/>
+  <g fill="none" stroke="#d9bfe6" stroke-width="3" stroke-opacity="0.75">
+    <path d="M400 420 C 320 362, 320 282, 368 282 C 391 282, 400 303, 400 312 C 400 303, 409 282, 432 282 C 480 282, 480 362, 400 420 Z"/>
+  </g>
+  <text x="82" y="196" font-family="'Segoe UI',sans-serif" font-size="13" fill="#f3e9f7" opacity="0.8">01</text>
+  <line x1="60" y1="520" x2="740" y2="520" stroke="#ffffff" stroke-opacity="0.12"/>
+  <text x="60" y="552" font-family="'Segoe UI',sans-serif" font-size="13" fill="#97869e">IMAGEEDIT · SIMULATED PREVIEW</text>
+</svg>

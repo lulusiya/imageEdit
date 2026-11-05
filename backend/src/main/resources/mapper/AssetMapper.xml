@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoying.imageedit.mapper.AssetMapper">
+
+    <insert id="insert">
+        INSERT INTO asset (id, owner_id, template_id, original_name, storage_key,
+                           content_type, size_bytes, created_at)
+        VALUES (#{id}, #{ownerId}, #{templateId}, #{originalName}, #{storageKey},
+                #{contentType}, #{sizeBytes}, #{createdAt})
+    </insert>
+
+    <select id="findByIdAndOwner" resultType="com.xiaoying.imageedit.domain.Asset">
+        SELECT id, owner_id, template_id, original_name, storage_key,
+               content_type, size_bytes, created_at
+        FROM asset
+        WHERE id = #{id} AND owner_id = #{ownerId}
+    </select>
+
+</mapper>

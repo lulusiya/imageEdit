@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" width="640" height="800" role="img" aria-label="城市天际线模板封面">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b2740"/>
+      <stop offset="1" stop-color="#0a0e16"/>
+    </linearGradient>
+    <linearGradient id="moon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#cfe0ff"/>
+      <stop offset="1" stop-color="#7aa2f7"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="800" fill="url(#bg)"/>
+  <circle cx="470" cy="210" r="92" fill="url(#moon)" opacity="0.9"/>
+  <circle cx="100" cy="640" r="220" fill="#7aa2f7" opacity="0.08"/>
+  <g fill="#7aa2f7">
+    <rect x="70" y="470" width="58" height="170" opacity="0.22"/>
+    <rect x="140" y="420" width="72" height="220" opacity="0.3"/>
+    <rect x="224" y="360" width="54" height="280" opacity="0.22"/>
+    <rect x="290" y="440" width="84" height="200" opacity="0.32"/>
+    <rect x="386" y="330" width="62" height="310" opacity="0.26"/>
+    <rect x="460" y="410" width="70" height="230" opacity="0.34"/>
+    <rect x="542" y="480" width="44" height="160" opacity="0.2"/>
+  </g>
+  <g fill="#cfe0ff" opacity="0.75">
+    <rect x="154" y="450" width="8" height="8"/>
+    <rect x="176" y="450" width="8" height="8"/>
+    <rect x="154" y="480" width="8" height="8"/>
+    <rect x="306" y="470" width="8" height="8"/>
+    <rect x="330" y="500" width="8" height="8"/>
+    <rect x="402" y="370" width="8" height="8"/>
+    <rect x="424" y="400" width="8" height="8"/>
+    <rect x="474" y="450" width="8" height="8"/>
+    <rect x="500" y="480" width="8" height="8"/>
+  </g>
+  <line x1="60" y1="640" x2="580" y2="640" stroke="#7aa2f7" stroke-opacity="0.5" stroke-width="2"/>
+  <line x1="60" y1="656" x2="400" y2="656" stroke="#7aa2f7" stroke-opacity="0.25" stroke-width="1"/>
+  <text x="60" y="712" font-family="'Segoe UI','Microsoft YaHei',sans-serif" font-size="42" font-weight="700" fill="#eef3ff">城市天际线</text>
+  <text x="62" y="748" font-family="'Segoe UI',sans-serif" font-size="17" letter-spacing="4" fill="#7aa2f7">CITY SKYLINE</text>
+  <text x="62" y="778" font-family="'Segoe UI',sans-serif" font-size="13" letter-spacing="2" fill="#7d8aa5">1 IMAGE · LOCAL SAMPLE</text>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" width="640" height="800" role="img" aria-label="双宝合影模板封面">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3d2f1d"/>
+      <stop offset="1" stop-color="#14100a"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="800" fill="url(#bg)"/>
+  <circle cx="540" cy="150" r="210" fill="#e0a458" opacity="0.08"/>
+  <g>
+    <rect x="90" y="250" width="460" height="180" rx="20" fill="#e0a458" opacity="0.12"/>
+    <rect x="90" y="250" width="460" height="180" rx="20" fill="none" stroke="#e0a458" stroke-opacity="0.4"/>
+    <circle cx="190" cy="340" r="58" fill="#e0a458" opacity="0.35"/>
+    <circle cx="180" cy="325" r="14" fill="#14100a"/>
+    <circle cx="205" cy="322" r="14" fill="#14100a"/>
+    <path d="M178 360 Q190 372 204 360" stroke="#14100a" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+  <g>
+    <rect x="90" y="452" width="460" height="180" rx="20" fill="#e0a458" opacity="0.16"/>
+    <rect x="90" y="452" width="460" height="180" rx="20" fill="none" stroke="#e0a458" stroke-opacity="0.5"/>
+    <circle cx="450" cy="542" r="58" fill="#e0a458" opacity="0.4"/>
+    <circle cx="440" cy="527" r="14" fill="#14100a"/>
+    <circle cx="465" cy="524" r="14" fill="#14100a"/>
+    <path d="M438 562 Q450 574 464 562" stroke="#14100a" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+  <text x="60" y="712" font-family="'Segoe UI','Microsoft YaHei',sans-serif" font-size="42" font-weight="700" fill="#f7efdf">双宝合影</text>
+  <text x="62" y="748" font-family="'Segoe UI',sans-serif" font-size="17" letter-spacing="4" fill="#e0a458">PET DUO</text>
+  <text x="62" y="778" font-family="'Segoe UI',sans-serif" font-size="13" letter-spacing="2" fill="#a58f6f">2 IMAGES · LOCAL SAMPLE</text>
+</svg>

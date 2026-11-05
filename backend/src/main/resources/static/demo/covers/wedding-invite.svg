@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" width="640" height="800" role="img" aria-label="婚礼请柬模板封面">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3b3428"/>
+      <stop offset="1" stop-color="#15120d"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="800" fill="url(#bg)"/>
+  <circle cx="320" cy="350" r="240" fill="#d9c7a7" opacity="0.05"/>
+  <path d="M170 600 L170 340 A150 150 0 0 1 470 340 L470 600 Z" fill="none" stroke="#d9c7a7" stroke-opacity="0.55" stroke-width="2"/>
+  <path d="M200 600 L200 350 A120 120 0 0 1 440 350 L440 600 Z" fill="#d9c7a7" opacity="0.06"/>
+  <g fill="none" stroke="#e6d9c2" stroke-width="6" opacity="0.85">
+    <circle cx="290" cy="380" r="48"/>
+    <circle cx="350" cy="380" r="48"/>
+  </g>
+  <line x1="250" y1="500" x2="390" y2="500" stroke="#d9c7a7" stroke-opacity="0.4" stroke-width="1"/>
+  <g fill="#d9c7a7" opacity="0.5">
+    <circle cx="320" cy="476" r="3"/>
+    <circle cx="320" cy="524" r="3"/>
+  </g>
+  <text x="60" y="712" font-family="'Segoe UI','Microsoft YaHei',sans-serif" font-size="42" font-weight="700" fill="#f6f1e7">婚礼请柬</text>
+  <text x="62" y="748" font-family="'Segoe UI',sans-serif" font-size="17" letter-spacing="4" fill="#d9c7a7">WEDDING INVITATION</text>
+  <text x="62" y="778" font-family="'Segoe UI',sans-serif" font-size="13" letter-spacing="2" fill="#9d9484">2 IMAGES · LOCAL SAMPLE</text>
+</svg>

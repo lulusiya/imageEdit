@@ -1,0 +1,26 @@
+# Frontend
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+
+# Backend
+target/
+backend/data/
+*.log
+
+# Runtime media (uploaded assets and rendered results)
+data/
+media/
+
+# Local env
+.env
+.env.local
+.env.*.local
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

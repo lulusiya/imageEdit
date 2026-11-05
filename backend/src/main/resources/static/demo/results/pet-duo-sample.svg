@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="双宝合影成品示例">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f2415"/>
+      <stop offset="1" stop-color="#0d0a06"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="700" cy="80" r="160" fill="#e0a458" opacity="0.08"/>
+  <rect x="60" y="60" width="12" height="46" rx="6" fill="#e0a458"/>
+  <text x="90" y="92" font-family="'Segoe UI',sans-serif" font-size="28" font-weight="700" fill="#f7efdf">PET DUO</text>
+  <text x="90" y="122" font-family="'Segoe UI',sans-serif" font-size="13" letter-spacing="3" fill="#e0a458">SAMPLE RESULT · 2 IMAGES</text>
+  <rect x="60" y="160" width="680" height="150" rx="14" fill="#e0a458" opacity="0.12"/>
+  <rect x="60" y="160" width="680" height="150" rx="14" fill="none" stroke="#e0a458" stroke-opacity="0.5" stroke-dasharray="7 7"/>
+  <circle cx="180" cy="235" r="40" fill="#e0a458" opacity="0.35"/>
+  <text x="82" y="196" font-family="'Segoe UI',sans-serif" font-size="13" fill="#f7efdf" opacity="0.8">01</text>
+  <rect x="60" y="330" width="680" height="150" rx="14" fill="#e0a458" opacity="0.16"/>
+  <rect x="60" y="330" width="680" height="150" rx="14" fill="none" stroke="#e0a458" stroke-opacity="0.6" stroke-dasharray="7 7"/>
+  <circle cx="620" cy="405" r="40" fill="#e0a458" opacity="0.4"/>
+  <text x="82" y="366" font-family="'Segoe UI',sans-serif" font-size="13" fill="#f7efdf" opacity="0.8">02</text>
+  <line x1="60" y1="520" x2="740" y2="520" stroke="#ffffff" stroke-opacity="0.12"/>
+  <text x="60" y="552" font-family="'Segoe UI',sans-serif" font-size="13" fill="#a58f6f">IMAGEEDIT · SIMULATED PREVIEW</text>
+</svg>

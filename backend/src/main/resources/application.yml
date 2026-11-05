@@ -1,0 +1,46 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+spring:
+  application:
+    name: image-edit-backend
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/image_edit?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false}
+    username: ${DB_USERNAME:imageedit}
+    password: ${DB_PASSWORD:imageedit_pass}
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 10000
+  servlet:
+    multipart:
+      max-file-size: 8MB
+      max-request-size: 12MB
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 15
+
+app:
+  storage-root: ${APP_STORAGE_ROOT:./data}
+  session-cookie-name: IMAGEEDIT_SESSION
+  recover-interrupted-tasks: ${RECOVER_INTERRUPTED_TASKS:true}
+  demo-users:
+    A: user-a
+    B: user-b
+
+simulation:
+  check-delay-ms: ${SIM_CHECK_DELAY_MS:1200}
+  generate-delay-ms: ${SIM_GENERATE_DELAY_MS:2000}
+  finalize-delay-ms: ${SIM_FINALIZE_DELAY_MS:1200}
+  fail-stage: ${SIM_FAIL_STAGE:}
+
+logging:
+  level:
+    com.xiaoying.imageedit: INFO

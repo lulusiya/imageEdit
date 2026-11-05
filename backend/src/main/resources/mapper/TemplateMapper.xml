@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoying.imageedit.mapper.TemplateMapper">
+
+    <sql id="templateColumns">
+        id, title, category, cover_url, description, required_image_count,
+        accepted_mime_types, max_file_size_bytes, sample_result_url, result_caption,
+        accent_color, sort_order
+    </sql>
+
+    <select id="findAll" resultType="com.xiaoying.imageedit.domain.Template">
+        SELECT <include refid="templateColumns"/>
+        FROM template
+        <where>
+            <if test="category != null and category != ''">
+                category = #{category}
+            </if>
+        </where>
+        ORDER BY sort_order ASC, id ASC
+    </select>
+
+    <select id="findById" resultType="com.xiaoying.imageedit.domain.Template">
+        SELECT <include refid="templateColumns"/>
+        FROM template
+        WHERE id = #{id}
+    </select>
+
+    <select id="findCategories" resultType="com.xiaoying.imageedit.domain.CategoryRow">
+        SELECT category AS name, COUNT(*) AS count
+        FROM template
+        GROUP BY category
+        ORDER BY MIN(sort_order) ASC
+    </select>
+
+</mapper>
