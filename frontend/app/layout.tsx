@@ -4,7 +4,7 @@ import './globals.css';
 import { IdentityProvider } from '../lib/identity';
 import { TaskHistoryProvider } from '../lib/taskHistory';
 import { SiteHeader } from '../components/SiteHeader';
-import { SiteFooter } from '../components/SiteFooter';
+import { SideNav } from '../components/SideNav';
 
 export const metadata: Metadata = {
   title: {
@@ -31,8 +31,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <IdentityProvider>
           <TaskHistoryProvider>
             <SiteHeader />
+            <SideNav />
             <main className="site-main">{children}</main>
-            <SiteFooter />
           </TaskHistoryProvider>
         </IdentityProvider>
       </body>

@@ -215,7 +215,7 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
       </div>
 
       <p className="workspace-hint">
-        支持 {detail.acceptedMimeTypes.map(mimeTypeLabel).join(' / ')}，上传后可直接预览、更换或移除。
+        支持 {detail.acceptedMimeTypes.map(mimeTypeLabel).join(' / ')}
         服务端会再次校验文件类型与可解码性。
       </p>
 
@@ -276,7 +276,6 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
                     +
                   </span>
                   <span>上传素材 {index + 1}</span>
-                  <small>点击选择本地图片</small>
                 </label>
               )}
               {slot.error && (
@@ -315,7 +314,6 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
         <div className="banner banner-success submit-success" role="status">
           <div>
             <strong>任务 #{submitted.id} 已提交</strong>
-            <p>后台正在按“素材检查 → 模拟生成 → 结果整理”处理，进度会实时刷新。</p>
           </div>
           <div className="submit-success-actions">
             <button

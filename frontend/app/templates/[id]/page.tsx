@@ -31,7 +31,7 @@ export default function TemplateDetailPage({ params }: { params: { id: string } 
 
   return (
     <div className="detail-page">
-      <Link href="/#templates" className="back-link">
+      <Link href="/templates" className="back-link">
         ← 返回模板库
       </Link>
 

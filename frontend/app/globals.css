@@ -1869,3 +1869,25 @@ body { background-image: none; }
 .work-query button { border: 0; background: transparent; text-decoration: underline; }
 .task-list { grid-template-columns: repeat(auto-fill,minmax(min(100%,175px),1fr)); }
 @media (max-width: 540px) { .task-list { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+
+:root { --rail: clamp(150px, 13vw, 220px); }
+.site-header-inner { max-width: none; justify-content: space-between; }
+.side-nav { position: fixed; inset: var(--header-height) auto 0 0; width: var(--rail); padding: 20px 10px; background: var(--bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; gap: 5px; z-index: 20; }
+.side-nav a, .side-nav button { display: flex; align-items: center; gap: 12px; font: inherit; padding: 11px 15px; color: var(--muted); background: transparent; border: 0; border-radius: 8px; }
+.side-nav :is(a,button):hover, .side-nav [aria-current="page"], .side-nav button[aria-expanded="true"] { background: var(--surface-2); color: var(--text); }
+.site-main { max-width: none; margin: 0 0 0 var(--rail); padding: 24px clamp(16px,1.6vw,30px) 48px; }
+.gallery-heading { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+.gallery-heading a { color: var(--muted); font-size: 13px; }
+.template-grid { grid-template-columns: repeat(5,minmax(0,1fr)); gap: 5px; }
+.template-cover, .template-skeleton { aspect-ratio: 3 / 4; }
+.template-card { border-radius: 5px; }
+.template-cover::after { display: none; }
+.template-body { inset: 8px auto auto 8px; max-width: calc(100% - 16px); padding: 3px 8px; border-radius: 5px; background: rgb(0 0 0 / 56%); }
+.template-body h3 { font-size: 12px; }
+@media(max-width:1000px) { .template-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+@media(max-width:680px) {
+  .side-nav { inset: auto 0 0; width: 100%; flex-direction: row; justify-content: space-around; border: 0; border-top: 1px solid var(--border); padding: 4px 4px max(4px,env(safe-area-inset-bottom)); }
+  .side-nav a, .side-nav button { flex: 1; flex-direction: column; gap: 2px; padding: 5px; font-size: 12px; }
+  .site-main { margin: 0; padding: 16px 12px 86px; }
+  .template-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}

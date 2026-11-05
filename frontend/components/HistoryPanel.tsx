@@ -52,7 +52,7 @@ export function HistoryPanel() {
       {!loading && !listError && tasks.length === 0 && (
         <div className="empty-state">
           <p>还没有创作记录。</p>
-          <Link href="/#templates" className="button primary">
+          <Link href="/templates" className="button primary">
             选一个模板开始
           </Link>
         </div>

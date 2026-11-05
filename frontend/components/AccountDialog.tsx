@@ -97,7 +97,6 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
       >
         <header className="modal-header">
           <div>
-            <p className="eyebrow">DEMO IDENTITY</p>
             <h2 id="account-dialog-title">演示身份</h2>
           </div>
           <button
@@ -111,9 +110,6 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
           </button>
         </header>
 
-        <p className="modal-copy">
-          任务与素材都绑定当前身份。切换身份后，只会看到该账号自己提交的记录，便于验证数据隔离。
-        </p>
 
         {status === 'loading' && (
           <div className="modal-status">
@@ -187,9 +183,6 @@ export function AccountDialog({ open, onClose }: AccountDialogProps) {
           </div>
         )}
 
-        <p className="modal-footnote">
-          演示账号通过 HttpOnly Cookie 维护服务端会话，浏览器无法直接读取会话令牌。
-        </p>
       </div>
     </div>
   );

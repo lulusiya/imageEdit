@@ -151,7 +151,6 @@ export function SimulationDialog({ open, onClose }: SimulationDialogProps) {
       >
         <header className="modal-header">
           <div>
-            <p className="eyebrow">DEMO CONTROLS</p>
             <h2 id="simulation-dialog-title">演示设置</h2>
           </div>
           <button type="button" className="icon-button" aria-label="关闭演示设置" onClick={onClose}>
@@ -159,9 +158,6 @@ export function SimulationDialog({ open, onClose }: SimulationDialogProps) {
           </button>
         </header>
 
-        <p className="modal-copy">
-          调整三个阶段的目标耗时，或指定一个固定失败阶段。设置会在任务受理时快照，只影响之后提交的任务。
-        </p>
 
         {loading && (
           <div className="modal-status">

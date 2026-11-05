@@ -4,16 +4,12 @@ import Link from 'next/link';
 import { useCallback, useState } from 'react';
 import { initials } from '../lib/format';
 import { useIdentity } from '../lib/identity';
-import { isTaskActive } from '../lib/taskFeed';
-import { useTaskHistory } from '../lib/taskHistory';
 import { AccountDialog } from './AccountDialog';
 
 export function SiteHeader() {
   const { user, status, error, retry, switching } = useIdentity();
-  const { tasks } = useTaskHistory();
   const [accountOpen, setAccountOpen] = useState(false);
   const closeAccount = useCallback(() => setAccountOpen(false), []);
-  const activeCount = tasks.filter((entry) => isTaskActive(entry.task)).length;
 
   return (
     <header className="site-header">
@@ -27,17 +23,6 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="site-nav" aria-label="主导航">
-          <Link href="/#templates">模板库</Link>
-          <Link href="/history" className="nav-history">
-            我的创作
-            {activeCount > 0 && (
-              <span className="nav-badge" aria-label={`${activeCount} 个进行中的任务`}>
-                {activeCount}
-              </span>
-            )}
-          </Link>
-        </nav>
 
         <div className="header-account">
           {status === 'loading' && <span className="header-hint">身份加载中…</span>}
