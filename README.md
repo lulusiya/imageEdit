@@ -4,14 +4,11 @@
 
 项目按要求实现了 **Next.js + Java/Spring Boot + MyBatis + MySQL** 的完整闭环；制作过程不调用真实 AI 服务，由可控耗时、可指定失败阶段的模拟执行器完成。
 
-![模板列表与个人创作记录](docs/screenshots/home.png)
+![光影工坊图标](frontend/public/app-icon.svg)
 
-<p align="center">
-  <img src="docs/screenshots/template-detail.png" width="49%" alt="模板详情、上传位与结果" />
-  <img src="docs/screenshots/identity-dialog.png" width="49%" alt="演示身份切换" />
-</p>
+默认英文，可切换中文。模板库提供 20 个模板，包含单图与双图流程。制作历史保留在个人页面，也可在模板制作页查看。
 
-> 截图使用本地种子数据与真实运行中的任务生成，未使用外部图片素材。
+快速启动使用 `docker compose up --build`，然后打开 [本地网站](http://127.0.0.1:3000/)。
 
 ## 目录
 
@@ -632,7 +629,7 @@ docker run --rm -v image-edit_media-data:/data -v "$PWD":/backup alpine \
 
 ```bash
 git fetch --tags
-git checkout acceptance-2026-11-06   # 或上一个稳定 commit / tag
+git checkout acceptance-2026-11-07   # 或上一个稳定 commit / tag
 docker compose up -d --build --force-recreate
 ```
 
@@ -664,9 +661,9 @@ docker compose up -d --build --force-recreate
 
 ## 16. 验收版本
 
-- 仓库根目录标签：**`acceptance-2026-11-06`**
+- 仓库根目录标签：**`acceptance-2026-11-07`**
 - 该标签指向包含本 README、全部源码、测试、CI、Compose 与初始化数据的验收提交。
-- 推送后可在 GitHub Releases / Tags 中查看；克隆后也可直接 `git checkout acceptance-2026-11-06`。
+- 推送后可在 GitHub Releases / Tags 中查看；克隆后也可直接 `git checkout acceptance-2026-11-07`。
 
 ```bash
 git push origin main --tags
@@ -684,3 +681,30 @@ git push origin main --tags
 - anniversary · https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2
 - duo-collage · https://images.unsplash.com/photo-1472396961693-142e6e269027
 - holiday-card · https://images.unsplash.com/photo-1482517967863-00e15c9b44be
+
+### 本地试用照片
+
+以下本地 JPEG 用于主页轮播和模板素材。
+
+- mountain-travel.jpg · https://images.unsplash.com/photo-1464822759023-fed622ff2c3b
+- city-travel.jpg · https://images.unsplash.com/photo-1519501025264-65ba15a82390
+- dogs-outdoors.jpg · https://images.unsplash.com/photo-1548199973-03cce0bbc87b
+- pet-portrait.jpg · https://images.unsplash.com/photo-1517849845537-4d257902454a
+- wedding-portrait.jpg · https://images.unsplash.com/photo-1519741497674-611481863552
+- wedding-detail.jpg · https://images.unsplash.com/photo-1519225421980-715cb0215aed
+
+- portrait-in-shadow.jpg · https://images.unsplash.com/photo-1500648767791-00dcc994a43e
+- winter-lights.jpg · https://images.unsplash.com/photo-1482517967863-00e15c9b44be
+- winter-evergreen.jpg · https://images.unsplash.com/photo-1512389142860-9c449e58a543
+
+### 新增模板封面来源
+
+- alpine-journal.jpg · https://images.unsplash.com/photo-1470770841072-f978cf4d019e
+- city-weekend.jpg · https://images.unsplash.com/photo-1519608487953-e999c86e7455
+- journey-pair.jpg · https://images.unsplash.com/photo-1501785888041-af3ef285b470
+- pet-closeup.jpg · https://images.unsplash.com/photo-1587300003388-59208cc962cb
+- park-pals.jpg · https://images.unsplash.com/photo-1552053831-71594a27632d
+- wedding-moments.jpg · https://images.unsplash.com/photo-1511285560929-80b456fea0bc
+- anniversary-print.jpg · https://images.unsplash.com/photo-1523438885200-e635ba2c371e
+- portrait-pair.jpg · https://images.unsplash.com/photo-1524504388940-b1c1722653e1
+- evergreen-card.jpg · https://images.unsplash.com/photo-1543589077-47d81606c1bf

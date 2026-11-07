@@ -1,12 +1,15 @@
 'use client';
 
+import { useLanguage } from '../lib/language';
 import { useEffect, useState } from 'react';
+import { Showcase } from './Showcase';
 import Link from 'next/link';
 import { TemplateCard } from './TemplateCard';
 import { errorMessage, getCategories, getTemplates, isAbortError } from '../lib/api';
 import type { CategorySummary, TemplateSummary } from '../lib/types';
 
 export function TemplateGallery({ featured = false }: { featured?: boolean }) {
+  const { t } = useLanguage();
   const [categories, setCategories] = useState<CategorySummary[] | null>(null);
   const [categoriesError, setCategoriesError] = useState<string | null>(null);
   const [categoriesReload, setCategoriesReload] = useState(0);
@@ -48,28 +51,27 @@ export function TemplateGallery({ featured = false }: { featured?: boolean }) {
 
   return (
     <div className="home-page">
+      {featured && templates && templates.length > 0 && <Showcase templates={templates} />}
       <section id="templates" className="templates-section" aria-labelledby="templates-title">
-        <div className="gallery-heading"><h1 id="templates-title">{featured ? '精选模板' : '模板库'}</h1>
-          {featured && <Link href="/templates">查看全部 →</Link>}
+        <div className="gallery-heading"><h1 id="templates-title">{t(featured ? '精选模板' : '模板库')}</h1>
+          {featured && <Link href="/templates">{t("查看全部 →")}</Link>}
         </div>
-        {!featured && <div className="category-bar" role="group" aria-label="按分类筛选模板">
+        {!featured && <div className="category-bar" role="group" aria-label={t("按分类筛选模板")}>
           <button
             type="button"
             className={`category-pill ${category === null ? 'active' : ''}`}
             aria-pressed={category === null}
             onClick={() => setCategory(null)}
-          >
-            全部
-          </button>
+          >{t("全部")}</button>
           {(categories ?? []).map((item) => (
             <button
-              key={item.name}
+              key={t(item.name)}
               type="button"
               className={`category-pill ${category === item.name ? 'active' : ''}`}
               aria-pressed={category === item.name}
               onClick={() => setCategory(item.name)}
             >
-              {item.name}
+              {t(item.name)}
             </button>
           ))}
           {categories === null && categoriesError === null && (
@@ -84,27 +86,23 @@ export function TemplateGallery({ featured = false }: { featured?: boolean }) {
               type="button"
               className="category-error"
               onClick={() => setCategoriesReload((value) => value + 1)}
-            >
-              分类加载失败，点击重试
-            </button>
+            >{t("分类加载失败，点击重试")}</button>
           )}
         </div>}
 
         {templatesError && (
           <div className="banner banner-error" role="alert">
-            <span>{templatesError}</span>
+            <span>{t(templatesError)}</span>
             <button
               type="button"
               className="button ghost small"
               onClick={() => setTemplatesReload((value) => value + 1)}
-            >
-              重新加载
-            </button>
+            >{t("重新加载")}</button>
           </div>
         )}
 
         {!templatesError && templates === null && (
-          <div className="template-grid" aria-label="正在加载模板">
+          <div className="template-grid" aria-label={t("正在加载模板")}>
             {Array.from({ length: 8 }, (_, index) => (
               <div key={index} className="skeleton template-skeleton" />
             ))}
@@ -113,11 +111,9 @@ export function TemplateGallery({ featured = false }: { featured?: boolean }) {
 
         {!templatesError && templates !== null && templates.length === 0 && (
           <div className="empty-state">
-            <p>{category ? `“${category}”分类下暂时没有模板。` : '暂时没有可用模板。'}</p>
+            <p>{t("暂无模板")}</p>
             {category && (
-              <button type="button" className="button primary" onClick={() => setCategory(null)}>
-                查看全部模板
-              </button>
+              <button type="button" className="button primary" onClick={() => setCategory(null)}>{t("查看全部模板")}</button>
             )}
           </div>
         )}

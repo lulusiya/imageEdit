@@ -1,10 +1,13 @@
 export type DemoIdentity = 'A' | 'B';
 
+export type AccountTier = 'PREMIUM' | 'STANDARD';
+
 export interface DemoUser {
   id: string;
   displayName: string;
   email: string;
   avatarColor: string;
+  accountTier: AccountTier;
 }
 
 export interface CategorySummary {

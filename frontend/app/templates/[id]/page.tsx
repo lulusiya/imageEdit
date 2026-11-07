@@ -1,5 +1,6 @@
 'use client';
 
+import { useLanguage } from '../../../lib/language';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { TemplateTasks } from '../../../components/TemplateTasks';
@@ -9,6 +10,7 @@ import { useIdentity } from '../../../lib/identity';
 import type { TemplateDetail } from '../../../lib/types';
 
 export default function TemplateDetailPage({ params }: { params: { id: string } }) {
+  const { t } = useLanguage();
   const templateId = params.id;
   const { user } = useIdentity();
   const [template, setTemplate] = useState<TemplateDetail | null>(null);
@@ -31,25 +33,22 @@ export default function TemplateDetailPage({ params }: { params: { id: string } 
 
   return (
     <div className="detail-page">
-      <Link href="/templates" className="back-link">
-        ← 返回模板库
-      </Link>
-
       {detailError && (
-        <div className="banner banner-error" role="alert">
-          <span>{detailError}</span>
-          <button
-            type="button"
-            className="button ghost small"
-            onClick={() => setReload((value) => value + 1)}
-          >
-            重新加载
-          </button>
-        </div>
+        <>
+          <Link href="/templates" className="back-link">{t("← 返回模板库")}</Link>
+          <div className="banner banner-error" role="alert">
+            <span>{t(detailError)}</span>
+            <button
+              type="button"
+              className="button ghost small"
+              onClick={() => setReload((value) => value + 1)}
+            >{t("重新加载")}</button>
+          </div>
+        </>
       )}
 
       {!detailError && template === null && (
-        <div className="detail-layout detail-loading" aria-label="正在加载模板详情">
+        <div className="detail-layout detail-loading" aria-label={t("正在加载模板详情")}>
           <div className="skeleton detail-preview-skeleton" />
           <div className="skeleton detail-workspace-skeleton" />
         </div>
@@ -58,16 +57,30 @@ export default function TemplateDetailPage({ params }: { params: { id: string } 
       {template && (
         <div className="detail-layout">
           <section className="maker-panel">
-            <header className="detail-heading"><h1>{template.title}</h1></header>
+            <header className="maker-heading">
+              <Link href="/templates" className="maker-back" aria-label={t("返回模板库")}>‹</Link>
+              <h1>{t(template.title)}</h1>
+            </header>
             <figure className="preview-frame">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={template.coverUrl} alt={template.title} />
-            </figure>
-            <p className="template-description">{template.description}</p>
-              <TemplateWorkspace
-                key={`${template.id}:${user?.id ?? 'anonymous'}`}
-                detail={template}
+              <img
+                src={template.coverUrl}
+                alt=""
+                aria-hidden="true"
+                className="preview-blur"
               />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={template.coverUrl}
+                alt={t(template.title)}
+                className="preview-art"
+              />
+              <span className="preview-mask" aria-hidden="true" />
+            </figure>
+            <TemplateWorkspace
+              key={`${template.id}:${user?.id ?? 'anonymous'}`}
+              detail={template}
+            />
           </section>
           <TemplateTasks templateId={template.id} />
         </div>

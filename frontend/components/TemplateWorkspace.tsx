@@ -1,5 +1,6 @@
 'use client';
 
+import { useLanguage } from '../lib/language';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createTask, errorMessage, isAbortError, uploadAsset } from '../lib/api';
 import { formatFileSize, mimeTypeLabel } from '../lib/format';
@@ -8,6 +9,7 @@ import type { AssetUploadResult, TaskItem, TemplateDetail } from '../lib/types';
 
 interface SlotState {
   file: File | null;
+  displayName?: string;
   previewUrl: string | null;
   asset: AssetUploadResult | null;
   uploading: boolean;
@@ -32,13 +34,13 @@ function validateFile(file: File, detail: TemplateDetail): string | null {
 }
 
 export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
+  const { t, lang } = useLanguage();
   const { addTask } = useTaskHistory();
   const [slots, setSlots] = useState<SlotState[]>(() =>
     Array.from({ length: detail.requiredImageCount }, emptySlot)
   );
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState<TaskItem | null>(null);
   const tokensRef = useRef<number[]>(Array.from({ length: detail.requiredImageCount }, () => 0));
   const controllersRef = useRef<Array<AbortController | null>>(
     Array.from({ length: detail.requiredImageCount }, () => null)
@@ -110,8 +112,6 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
             : slot
         )
       );
-      setSubmitted(null);
-
       uploadAsset(detail.id, file, controller.signal)
         .then((asset) => {
           if (token !== tokensRef.current[index]) {
@@ -168,7 +168,6 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
     }
     setSubmitting(true);
     setSubmitError(null);
-    setSubmitted(null);
     try {
       const accepted = await createTask(
         detail.id,
@@ -186,7 +185,6 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
         failureReason: null
       };
       addTask(task);
-      setSubmitted(task);
       slots.forEach((_, index) => releaseSlot(index));
       setSlots(Array.from({ length: detail.requiredImageCount }, emptySlot));
     } catch (error) {
@@ -196,7 +194,6 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
     }
   }, [addTask, detail, releaseSlot, slots, submitting]);
 
-  const uploadedCount = slots.filter((slot) => slot.asset && !slot.uploading).length;
   const canSubmit =
     slots.length > 0 &&
     slots.every((slot) => slot.asset && !slot.uploading && !slot.error) &&
@@ -205,19 +202,11 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
   return (
     <div className="workspace">
       <div className="workspace-heading">
-        <div>
-          <h2>上传素材</h2>
-        </div>
+        <h2>{t("上传")}</h2>
         <span className="workspace-requirement">
-          需要 {detail.requiredImageCount} 张 · 单张不超过{' '}
-          {formatFileSize(detail.maxFileSizeBytes)}
+          {detail.requiredImageCount} × {formatFileSize(detail.maxFileSizeBytes)}
         </span>
       </div>
-
-      <p className="workspace-hint">
-        支持 {detail.acceptedMimeTypes.map(mimeTypeLabel).join(' / ')}
-        服务端会再次校验文件类型与可解码性。
-      </p>
 
       <div className={`upload-slots upload-slots-${Math.min(detail.requiredImageCount, 3)}`}>
         {slots.map((slot, index) => {
@@ -245,42 +234,68 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={slot.previewUrl}
-                    alt={`素材 ${index + 1} 预览`}
+                    alt=""
+                    aria-hidden="true"
+                    className="slot-blur"
+                  />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={slot.previewUrl}
+                    alt={t("预览")}
                     className="slot-preview"
                   />
+                  {slot.asset && (
+                    <input
+                      className="slot-name"
+                      type="text"
+                      aria-label={lang === 'en' ? `Photo ${index + 1} name` : `图片 ${index + 1} 名称`}
+                      value={slot.displayName ?? slot.asset.originalName}
+                      maxLength={120}
+                      onChange={(event) => {
+                        const displayName = event.target.value;
+                        setSlots((current) => current.map((entry, slotIndex) =>
+                          slotIndex === index ? { ...entry, displayName } : entry
+                        ));
+                      }}
+                      onBlur={(event) => {
+                        const displayName = event.target.value.trim() || undefined;
+                        setSlots((current) => current.map((entry, slotIndex) =>
+                          slotIndex === index ? { ...entry, displayName } : entry
+                        ));
+                      }}
+                    />
+                  )}
                   <div className="slot-overlay">
                     <span className={`slot-status ${slot.asset ? 'slot-ok' : ''}`}>
-                      {slot.uploading
+                      {t(slot.uploading
                         ? '上传中…'
                         : slot.asset
-                          ? `已上传 · ${formatFileSize(slot.asset.sizeBytes)}`
-                          : '等待重试'}
+                          ? formatFileSize(slot.asset.sizeBytes)
+                          : '等待重试')}
                     </span>
                     <div className="slot-actions">
-                      <label htmlFor={inputId} className="slot-button">
-                        更换
-                      </label>
+                      <label htmlFor={inputId} className="slot-button">{t("更换")}</label>
                       <button
                         type="button"
                         className="slot-button danger"
                         onClick={() => handleRemove(index)}
-                      >
-                        移除
-                      </button>
+                      >{t("移除")}</button>
                     </div>
                   </div>
                 </>
               ) : (
                 <label htmlFor={inputId} className="slot-empty">
-                  <span className="slot-plus" aria-hidden="true">
-                    +
-                  </span>
-                  <span>上传素材 {index + 1}</span>
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="16" rx="2" />
+                    <circle cx="9" cy="10" r="1.6" />
+                    <path d="m21 15-4.5-4.5L7 20" />
+                  </svg>
+                  <span>{t("点击上传图片")}</span>
                 </label>
               )}
               {slot.error && (
                 <p className="slot-error" role="alert">
-                  {slot.error}
+                  {t(slot.error)}
                 </p>
               )}
             </div>
@@ -288,42 +303,27 @@ export function TemplateWorkspace({ detail }: { detail: TemplateDetail }) {
         })}
       </div>
 
+      <div className="workspace-info">
+        <h3>{t("模板说明")}</h3>
+        <p className="workspace-description">
+          {lang === 'zh' ? detail.description : t(detail.description)}
+        </p>
+      </div>
+
       <div className="submit-row">
-        <div className="submit-meta">
-          <strong>
-            {uploadedCount} / {slots.length} 张素材已就绪
-          </strong>
-        </div>
         <button
           type="button"
           className="button primary"
           onClick={() => void handleSubmit()}
           disabled={!canSubmit}
         >
-          {submitting ? '提交中…' : '开始制作'}
+          {t(submitting ? '提交中…' : '开始制作')}
         </button>
       </div>
 
       {submitError && (
         <div className="banner banner-error" role="alert">
-          {submitError}
-        </div>
-      )}
-
-      {submitted && (
-        <div className="banner banner-success submit-success" role="status">
-          <div>
-            <strong>任务 #{submitted.id} 已提交</strong>
-          </div>
-          <div className="submit-success-actions">
-            <button
-              type="button"
-              className="button ghost small"
-              onClick={() => setSubmitted(null)}
-            >
-              继续制作
-            </button>
-          </div>
+          {t(submitError)}
         </div>
       )}
     </div>

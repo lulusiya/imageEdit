@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS app_user (
     display_name  VARCHAR(64)  NOT NULL,
     email         VARCHAR(128) NOT NULL,
     avatar_color  VARCHAR(16)  NOT NULL,
+    account_tier  VARCHAR(16)  NOT NULL DEFAULT 'STANDARD',
     created_at    DATETIME(3)  NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 

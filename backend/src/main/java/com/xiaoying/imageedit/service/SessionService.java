@@ -84,6 +84,7 @@ public class SessionService {
     }
 
     private SessionUser toSessionUser(User user) {
-        return new SessionUser(user.getId(), user.getDisplayName(), user.getEmail(), user.getAvatarColor());
+        return new SessionUser(user.getId(), user.getDisplayName(), user.getEmail(), user.getAvatarColor(),
+                user.getAccountTier());
     }
 }

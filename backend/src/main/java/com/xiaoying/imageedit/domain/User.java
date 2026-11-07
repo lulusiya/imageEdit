@@ -6,6 +6,7 @@ public class User {
     private String displayName;
     private String email;
     private String avatarColor;
+    private String accountTier;
 
     public String getId() {
         return id;
@@ -37,5 +38,13 @@ public class User {
 
     public void setAvatarColor(String avatarColor) {
         this.avatarColor = avatarColor;
+    }
+
+    public String getAccountTier() {
+        return accountTier;
+    }
+
+    public void setAccountTier(String accountTier) {
+        this.accountTier = accountTier;
     }
 }

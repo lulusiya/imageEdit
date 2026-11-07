@@ -1,25 +1,16 @@
 'use client';
 
-import { useCallback, useState } from 'react';
-import { SimulationDialog } from './SimulationDialog';
+import Link from 'next/link';
 
 export function SiteFooter() {
-  const [simulationOpen, setSimulationOpen] = useState(false);
-  const closeSimulation = useCallback(() => setSimulationOpen(false), []);
-
   return (
     <footer className="site-footer">
       <div className="site-footer-inner">
         <p>光影工坊</p>
-        <button
-          type="button"
-          className="footer-link"
-          onClick={() => setSimulationOpen(true)}
-        >
+        <Link className="footer-link" href="/settings">
           演示设置
-        </button>
+        </Link>
       </div>
-      <SimulationDialog open={simulationOpen} onClose={closeSimulation} />
     </footer>
   );
 }

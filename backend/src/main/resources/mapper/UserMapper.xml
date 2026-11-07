@@ -3,7 +3,7 @@
 <mapper namespace="com.xiaoying.imageedit.mapper.UserMapper">
 
     <select id="findById" resultType="com.xiaoying.imageedit.domain.User">
-        SELECT id, display_name, email, avatar_color
+        SELECT id, display_name, email, avatar_color, account_tier
         FROM app_user
         WHERE id = #{id}
     </select>

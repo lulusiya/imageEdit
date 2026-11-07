@@ -5,7 +5,6 @@ import com.xiaoying.imageedit.domain.Task;
 import com.xiaoying.imageedit.domain.TaskStage;
 import com.xiaoying.imageedit.storage.MediaStore;
 import com.xiaoying.imageedit.storage.ResultStore;
-import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -13,6 +12,7 @@ import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -24,14 +24,15 @@ import javax.imageio.ImageIO;
 import org.springframework.stereotype.Component;
 
 /**
- * Renders the simulated final artifact from the uploaded assets. No AI service is used:
- * the output is a deterministic collage with a title, frame and timestamp.
+ * Renders the simulated final artifact from the uploaded asset. No AI service is used:
+ * the portrait photo is placed inside a deterministic 9:16 template mask with a title,
+ * frame and timestamp so the demo always has a predictable output.
  */
 @Component
 public class Java2dResultComposer implements ResultComposer {
 
-    private static final int WIDTH = 1200;
-    private static final int HEIGHT = 1500;
+    private static final int WIDTH = 1080;
+    private static final int HEIGHT = 1920;
     private static final Color FALLBACK_ACCENT = new Color(0xA7C957);
 
     private final MediaStore mediaStore;
@@ -50,8 +51,8 @@ public class Java2dResultComposer implements ResultComposer {
         try {
             configure(g);
             drawBackground(g, accent);
+            drawTemplateMask(g, assets, accent);
             drawHeader(g, task, accent);
-            drawFrames(g, assets, accent);
             drawFooter(g, task, accent);
         } finally {
             g.dispose();
@@ -77,86 +78,103 @@ public class Java2dResultComposer implements ResultComposer {
         g.setPaint(new GradientPaint(0, 0, new Color(0x1B1D23), WIDTH, HEIGHT, new Color(0x0A0B0D)));
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        g.setComposite(AlphaComposite.SrcOver.derive(0.10f));
+        g.setComposite(java.awt.AlphaComposite.SrcOver.derive(0.10f));
         g.setColor(accent);
-        g.fillOval(820, -260, 780, 780);
-        g.fillOval(-300, 900, 640, 640);
-        g.setComposite(AlphaComposite.SrcOver);
+        g.fillOval(760, -320, 900, 900);
+        g.fillOval(-340, 1240, 820, 820);
+        g.setComposite(java.awt.AlphaComposite.SrcOver);
 
         g.setColor(new Color(255, 255, 255, 10));
         g.setStroke(new BasicStroke(1f));
-        for (int x = 90; x <= WIDTH - 90; x += 85) {
+        for (int x = 72; x <= WIDTH - 72; x += 96) {
             g.drawLine(x, 0, x, HEIGHT);
         }
-        for (int y = 0; y <= HEIGHT; y += 85) {
+        for (int y = 0; y <= HEIGHT; y += 96) {
             g.drawLine(0, y, WIDTH, y);
         }
     }
 
+    private void drawTemplateMask(Graphics2D g, List<Asset> assets, Color accent) {
+        int x = 36;
+        int y = 36;
+        int width = WIDTH - 72;
+        int height = HEIGHT - 72;
+        int radius = 40;
+        RoundRectangle2D mask = new RoundRectangle2D.Float(x, y, width, height, radius, radius);
+
+        Shape oldClip = g.getClip();
+        g.setClip(mask);
+        if (assets.size() <= 1) {
+            drawCover(g, loadImage(assets.get(0)), x, y, width, height);
+        } else {
+            int gap = 24;
+            int half = (height - gap) / 2;
+            drawCover(g, loadImage(assets.get(0)), x, y, width, half);
+            drawCover(g, loadImage(assets.get(1)), x, y + half + gap, width, half);
+        }
+
+        g.setPaint(new GradientPaint(0, y, new Color(0, 0, 0, 130), 0, y + 360, new Color(0, 0, 0, 0)));
+        g.fillRect(x, y, width, 380);
+        g.setPaint(new GradientPaint(0, y + height * 0.62f, new Color(0, 0, 0, 0), 0, y + height, new Color(0, 0, 0, 205)));
+        g.fillRect(x, y + (int) (height * 0.62f), width, height - (int) (height * 0.62f));
+        g.setClip(oldClip);
+
+        g.setStroke(new BasicStroke(2f));
+        g.setColor(new Color(accent.getRed(), accent.getGreen(), accent.getBlue(), 170));
+        g.draw(mask);
+        drawCornerTicks(g, x, y, width, height);
+    }
+
+    private void drawCornerTicks(Graphics2D g, int x, int y, int width, int height) {
+        int inset = 28;
+        int length = 44;
+        g.setColor(new Color(255, 255, 255, 210));
+        g.setStroke(new BasicStroke(2.4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        int left = x + inset;
+        int right = x + width - inset;
+        int top = y + inset;
+        int bottom = y + height - inset;
+        g.drawLine(left, top, left + length, top);
+        g.drawLine(left, top, left, top + length);
+        g.drawLine(right, top, right - length, top);
+        g.drawLine(right, top, right, top + length);
+        g.drawLine(left, bottom, left + length, bottom);
+        g.drawLine(left, bottom, left, bottom - length);
+        g.drawLine(right, bottom, right - length, bottom);
+        g.drawLine(right, bottom, right, bottom - length);
+    }
+
     private void drawHeader(Graphics2D g, Task task, Color accent) {
         g.setColor(accent);
-        g.fillRoundRect(90, 106, 84, 10, 10, 10);
+        g.fillRoundRect(84, 112, 64, 8, 8, 8);
 
         String caption = task.getResultCaption() == null || task.getResultCaption().isBlank()
                 ? "IMAGEEDIT CREATION"
                 : task.getResultCaption().toUpperCase();
 
-        int fontSize = 54;
+        int fontSize = 56;
         Font font = new Font(Font.SANS_SERIF, Font.BOLD, fontSize);
         while (fontSize > 30) {
             FontMetrics metrics = g.getFontMetrics(font);
-            if (metrics.stringWidth(caption) <= WIDTH - 220) {
+            if (metrics.stringWidth(caption) <= WIDTH - 240) {
                 break;
             }
             fontSize -= 2;
             font = new Font(Font.SANS_SERIF, Font.BOLD, fontSize);
         }
         g.setFont(font);
-        g.setColor(new Color(0xF3F4F6));
-        g.drawString(caption, 90, 215);
+        g.setColor(new Color(0xF7F8FA));
+        g.drawString(caption, 84, 196);
 
-        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
-        g.setColor(new Color(0x9AA0A8));
-        g.drawString("SIMULATED RESULT  ·  IMAGEEDIT STUDIO", 90, 262);
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        g.setColor(new Color(0xD5D8DD));
+        g.drawString("SIMULATED RESULT  ·  IMAGEEDIT STUDIO", 84, 234);
 
-        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 22));
         g.setColor(accent);
         String id = String.format("#%04d", task.getId());
         FontMetrics metrics = g.getFontMetrics();
-        g.drawString(id, WIDTH - 90 - metrics.stringWidth(id), 215);
-    }
-
-    private void drawFrames(Graphics2D g, List<Asset> assets, Color accent) {
-        int count = assets.size();
-        if (count <= 1) {
-            drawImageFrame(g, assets.get(0), 90, 330, 1020, 880, accent, "01");
-            return;
-        }
-        drawImageFrame(g, assets.get(0), 90, 330, 1020, 420, accent, "01");
-        drawImageFrame(g, assets.get(1), 90, 790, 1020, 420, accent, "02");
-    }
-
-    private void drawImageFrame(Graphics2D g, Asset asset, int x, int y, int width, int height,
-                                Color accent, String label) {
-        BufferedImage image = loadImage(asset);
-        int radius = 26;
-
-        RoundRectangle2D frame = new RoundRectangle2D.Float(x, y, width, height, radius, radius);
-        g.setColor(new Color(255, 255, 255, 14));
-        g.fill(frame);
-
-        java.awt.Shape oldClip = g.getClip();
-        g.setClip(frame);
-        drawCover(g, image, x, y, width, height);
-        g.setClip(oldClip);
-
-        g.setStroke(new BasicStroke(2f));
-        g.setColor(new Color(accent.getRed(), accent.getGreen(), accent.getBlue(), 150));
-        g.draw(frame);
-
-        g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
-        g.setColor(new Color(255, 255, 255, 170));
-        g.drawString(label, x + 24, y + 42);
+        g.drawString(id, WIDTH - 84 - metrics.stringWidth(id), 196);
     }
 
     private void drawCover(Graphics2D g, BufferedImage image, int x, int y, int width, int height) {
@@ -183,18 +201,18 @@ public class Java2dResultComposer implements ResultComposer {
     }
 
     private void drawFooter(Graphics2D g, Task task, Color accent) {
-        int lineY = 1335;
-        g.setColor(new Color(255, 255, 255, 22));
-        g.fillRect(90, lineY, WIDTH - 180, 1);
+        int lineY = HEIGHT - 176;
+        g.setColor(new Color(255, 255, 255, 60));
+        g.fillRect(84, lineY, WIDTH - 168, 1);
 
-        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 22));
-        g.setColor(new Color(0x9AA0A8));
-        g.drawString("CREATED " + LocalDate.now(), 90, lineY + 52);
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        g.setColor(new Color(0xD5D8DD));
+        g.drawString("CREATED " + LocalDate.now(), 84, lineY + 50);
 
         g.setColor(accent);
         String right = "IMAGEEDIT · TASK " + task.getId();
         FontMetrics metrics = g.getFontMetrics();
-        g.drawString(right, WIDTH - 90 - metrics.stringWidth(right), lineY + 52);
+        g.drawString(right, WIDTH - 84 - metrics.stringWidth(right), lineY + 50);
     }
 
     private static Color parseColor(String value) {

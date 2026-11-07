@@ -8,7 +8,7 @@
     </insert>
 
     <select id="findUserBySessionId" resultType="com.xiaoying.imageedit.domain.User">
-        SELECT u.id, u.display_name, u.email, u.avatar_color
+        SELECT u.id, u.display_name, u.email, u.avatar_color, u.account_tier
         FROM demo_session s
         JOIN app_user u ON u.id = s.user_id
         WHERE s.id = #{sessionId}

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
+import { LanguageProvider } from '../lib/language';
 import { IdentityProvider } from '../lib/identity';
 import { TaskHistoryProvider } from '../lib/taskHistory';
 import { SiteHeader } from '../components/SiteHeader';
@@ -8,13 +9,13 @@ import { SideNav } from '../components/SideNav';
 
 export const metadata: Metadata = {
   title: {
-    default: '光影工坊 · 素材制作',
-    template: '%s · 光影工坊'
+    default: 'Frame Studio',
+    template: '%s · Frame Studio'
   },
   description:
-    '选择一个模板，上传素材，提交异步生成任务，实时查看素材检查、模拟生成与结果整理的完整流程。',
+    'Create images from photo templates.',
   icons: {
-    icon: '/favicon.svg'
+    icon: { url: '/app-icon.svg', type: 'image/svg+xml' }
   }
 };
 
@@ -26,15 +27,15 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="zh-CN">
+    <html lang="en">
       <body>
-        <IdentityProvider>
+        <LanguageProvider><IdentityProvider>
           <TaskHistoryProvider>
             <SiteHeader />
             <SideNav />
             <main className="site-main">{children}</main>
           </TaskHistoryProvider>
-        </IdentityProvider>
+        </IdentityProvider></LanguageProvider>
       </body>
     </html>
   );
