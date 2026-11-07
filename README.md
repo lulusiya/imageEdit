@@ -6,9 +6,19 @@
 
 ![光影工坊图标](frontend/public/app-icon.svg)
 
-默认英文，可切换中文。模板库提供 20 个模板，包含单图与双图流程。制作历史保留在个人页面，也可在模板制作页查看。
+默认英文，可切换中文。模板库提供 20 个模板，包含单图与双图流程。制作历史保留在个人页面，也可在模板制作页查看。演示账号区分高级用户（Premium）与普通用户（Free），等级徽章显示在顶部栏、身份弹窗与设置页。
 
 快速启动使用 `docker compose up --build`，然后打开 [本地网站](http://127.0.0.1:3000/)。
+
+## 界面预览
+
+| 首页 | 模板制作页 |
+| --- | --- |
+| ![首页](docs/screenshots/home.png) | ![模板制作页](docs/screenshots/template-detail.png) |
+
+| 演示身份 | 设置页 |
+| --- | --- |
+| ![演示身份](docs/screenshots/identity-dialog.png) | ![设置页](docs/screenshots/settings.png) |
 
 ## 目录
 
@@ -31,7 +41,7 @@
 
 ## 1. 功能概览
 
-- **模板库**：8 个本地种子模板，4 个分类；卡片展示封面、标题、所需素材数；支持服务端按分类筛选。
+- **模板库**：20 个本地种子模板，4 个分类；卡片展示封面、标题、所需素材数；支持服务端按分类筛选。
 - **模板详情**：描述、示例效果、素材要求（数量 / 格式 / 单张大小）；按 `requiredImageCount` 动态生成上传位。
 - **素材上传**：选择、即时预览、替换、移除；客户端校验格式与大小，服务端额外做 Magic Bytes 嗅探和 `ImageIO` 可解码校验；上传中 / 失败状态可见；替换时旧请求会被中止，旧响应不会覆盖新文件。
 - **异步任务**：提交接口完成校验和任务落库后返回 `202` 与任务 ID，不等待制作完成；关闭页面不会中断后端任务。
@@ -42,6 +52,9 @@
 - **多任务隔离**：每个任务独立轮询、独立阶段与错误；终态任务立即停止轮询；切换页面或身份时清理旧请求。
 - **刷新恢复**：任务与历史存储在 MySQL；刷新页面后重新拉取历史，只继续跟踪未结束的任务。
 - **个人身份**：服务端演示会话 + HttpOnly Cookie；素材、任务、结果均按 owner 做访问控制。
+- **账户等级**：演示身份区分高级用户（Premium）与普通用户（Free），顶部栏、身份弹窗与设置页均展示等级徽章。
+- **设置页**：左侧导航「设置」为独立页面，包含账户信息、界面语言、历史默认视图与演示控制（三段耗时 / 失败注入）。
+- **历史视图切换**：模板详情页的历史作品支持横向单行与网格两种排列，选择保存在本地；横向模式带常驻滚动条。
 - **响应式深色界面**：桌面端为主，小屏可操作；键盘焦点可见，上传位与图标按钮有可理解标签。
 - **工程交付**：Vitest / JUnit 核心测试、GitHub Actions CI、Docker Compose、初始化 SQL、README。
 
@@ -160,8 +173,11 @@ imageEdit/
 ├─ docker-compose.yml             # frontend + backend + mysql + 数据卷
 ├─ database/init/
 │  ├─ 01-schema.sql               # 表结构
-│  └─ 02-seed.sql                 # 2 个演示用户 + 8 个模板
-├─ docs/screenshots/              # 本地运行截图
+│  ├─ 02-seed.sql                 # 2 个演示用户 + 8 个基础模板
+│  ├─ 03-extra-templates.sql      # 冬夜灯影 / 光影肖像 / 冬日双图
+│  ├─ 04-template-gallery.sql     # 扩充至 20 个模板
+│  └─ 05-gallery-covers.sql       # 新增模板封面图
+├─ docs/screenshots/              # 当前界面截图（首页 / 制作页 / 身份 / 设置）
 ├─ backend/
 │  ├─ Dockerfile
 │  ├─ pom.xml
@@ -227,14 +243,14 @@ Compose 额外读取根目录 `.env`：`MYSQL_PASSWORD`、`MYSQL_ROOT_PASSWORD`�
 
 ### 6.2 种子数据
 
-- 2 个演示身份：`user-a 林小满`、`user-b 周予安`。
-- 8 个模板，每类 2 个：
-  - 旅行纪念：旅行明信片（2 图）、城市天际线（1 图）
-  - 萌宠日常：萌宠写真（1 图）、双宝合影（2 图）
-  - 婚礼庆典：婚礼请柬（2 图）、周年纪念（1 图）
-  - 创意海报：双人拼贴（2 图）、节日贺卡（1 图）
-- 封面与示例结果为后端 classpath 下的本地 SVG（`/api/demo/covers/*.svg`、`/api/demo/results/*-sample.svg`），由后端静态资源直接提供，不依赖外部图片服务。
-- 真实制作结果不是预置文件：任务成功后由 Java2D 将用户上传的图片合成为 1200×1500 PNG，写入 `APP_STORAGE_ROOT/results`，再通过鉴权接口返回。
+- 2 个演示身份：`user-a 林小满`（高级用户 / `PREMIUM`）、`user-b 周予安`（普通用户 / `STANDARD`）。
+- 20 个模板，4 个分类（由 `02-seed.sql` 与 `03`–`05` 增量脚本共同写入）：
+  - 旅行纪念：旅行明信片（1 图）、城市天际线（1 图）、山间手记（1 图）、城市周末（1 图）、旅途双页（2 图）
+  - 萌宠日常：萌宠写真（1 图）、双宝合影（1 图）、宠物特写（1 图）、公园伙伴（2 图）
+  - 婚礼庆典：婚礼请柬（1 图）、周年纪念（1 图）、婚礼瞬间（2 图）、纪念影印（1 图）
+  - 创意海报：双人拼贴（1 图）、节日贺卡（1 图）、冬夜灯影（1 图）、光影肖像（1 图）、冬日双图（2 图）、肖像双联（2 图）、常青贺卡（1 图）
+- 封面与示例结果为后端 classpath 下的本地 SVG（`/api/demo/covers/*.svg`、`/api/demo/results/*-sample.svg`），部分新模板使用 `frontend/public/sample-photos` 下的本地照片作为封面，均不依赖外部图片服务。
+- 真实制作结果不是预置文件：任务成功后由 Java2D 将用户上传的图片合成为 1080×1920 竖版 PNG，写入 `APP_STORAGE_ROOT/results`，再通过鉴权接口返回。
 
 ## 7. 主要接口
 
@@ -273,10 +289,13 @@ Content-Type: application/json
     "id": "user-a",
     "displayName": "林小满",
     "email": "lin.xiaoman@imageedit.demo",
-    "avatarColor": "#9BBF3E"
+    "avatarColor": "#9BBF3E",
+    "accountTier": "PREMIUM"
   }
 }
 ```
+
+`accountTier` 取值为 `PREMIUM`（高级用户）或 `STANDARD`（普通用户），由 `app_user.account_tier` 提供；`GET /api/session` 返回同样结构。
 
 响应同时写入 `Set-Cookie: IMAGEEDIT_SESSION=<uuid>; HttpOnly; Path=/; SameSite=Lax; Max-Age=2592000`。
 
@@ -315,7 +334,7 @@ Content-Type: application/json
 
 {
   "templateId": "travel-postcard",
-  "assetIds": ["<id-1>", "<id-2>"],
+  "assetIds": ["<asset-id>"],
   "simulation": {
     "checkDelayMs": 2500,
     "generateDelayMs": 3000,
@@ -325,7 +344,7 @@ Content-Type: application/json
 }
 ```
 
-`simulation` 可省略；字段也可省略，省略项继承当前全局设置。服务端会校验素材数量、重复、owner、模板归属、MIME 与大小，并快照耗时 / 失败阶段到任务记录。
+`simulation` 可省略；字段也可省略，省略项继承当前全局设置。`assetIds` 数量必须与模板的 `requiredImageCount` 一致（多数模板 1 张，旅途双页 / 公园伙伴 / 婚礼瞬间 / 冬日双图 / 肖像双联为 2 张）。服务端会校验素材数量、重复、owner、模板归属、MIME 与大小，并快照耗时 / 失败阶段到任务记录。
 
 成功响应 `202 Accepted`：
 
@@ -415,7 +434,7 @@ FAILED (stage, reason)   FAILED                 FAILED
 
 ### 8.3 结果整理
 
-`Java2dResultComposer` 读取按槽位排序的素材，生成 1200×1500 PNG 拼贴，包含模板配色、标题、任务编号与留白；图片按 cover 方式裁切。为保证容器内无中文字体时也能稳定输出，结果海报上的排版文字使用 ASCII 模板标题。结果文件写入本地存储，DB 只保存 `result_key`。
+`Java2dResultComposer` 读取按槽位排序的素材，生成 1080×1920 竖版 PNG：深色渐变背景叠加模板主色光晕与网格，素材放入 9:16 圆角遮罩——单图填满、双图上下各占一半（间隔 24px），均按 cover 方式裁切；遮罩上下叠加渐变暗角与四角取景标记。头部绘制标题与任务编号，底部绘制日期与 `IMAGEEDIT · TASK` 标识。为保证容器内无中文字体时也能稳定输出，结果海报上的排版文字使用 ASCII 模板标题。结果文件写入本地存储，DB 只保存 `result_key`。
 
 ### 8.4 重启恢复的边界
 
@@ -426,16 +445,16 @@ FAILED (stage, reason)   FAILED                 FAILED
 ### 9.1 成功闭环
 
 1. 打开 http://127.0.0.1:3000 ，选择任意模板，例如“旅行明信片”。
-2. 点击两个上传位，选择本地 JPG/PNG（单张 ≤ 5 MB）；预览出现后显示“已上传”。
-3. 点击“提交生成任务”，按钮进入提交中，成功后立即出现任务 #ID，并提示后台处理中。
-4. 在当前页“制作历史”或导航栏“我的”中观察阶段依次变为 `素材检查 → 模拟生成 → 结果整理`，最终为“已完成”，可查看 / 下载 1200×1500 PNG 结果。
+2. 按模板提示上传图片（多数模板 1 张，双图模板 2 张），选择本地 JPG/PNG（单张 ≤ 5 MB）；预览出现后显示“已上传”。
+3. 点击“开始制作”，按钮进入提交中，成功后立即出现任务 #ID，并提示后台处理中。
+4. 在页面右侧“历史”或左侧导航「作品」中观察阶段依次变为 `素材检查 → 模拟生成 → 结果整理`，最终为“已完成”，可查看 / 下载 1080×1920 PNG 结果。
 5. 刷新页面，历史从后端恢复；已完成任务不会再次轮询。
 
 ### 9.2 调整耗时
 
 三种方式任选：
 
-- 导航栏“设置”，填写三段毫秒数后保存；
+- 左侧导航「设置」（页面底部也有入口），在“演示控制”中填写三段毫秒数后保存；
 - 环境变量 `SIM_CHECK_DELAY_MS / SIM_GENERATE_DELAY_MS / SIM_FINALIZE_DELAY_MS`；
 - 单次提交时传入 `simulation` 覆盖（见 7.3）。
 
@@ -443,11 +462,11 @@ FAILED (stage, reason)   FAILED                 FAILED
 
 ### 9.3 指定阶段失败
 
-- 导航栏“设置” → “确定性失败注入”选择 `素材检查 / 模拟生成 / 结果整理` → 保存，然后提交新任务；
+- 左侧导航「设置」 → “演示控制” → “确定性失败注入”选择 `素材检查 / 模拟生成 / 结果整理` → 保存，然后提交新任务；
 - 或设置 `SIM_FAIL_STAGE=GENERATE` 后重启后端；
 - 或单次提交时传入 `"failStage": "GENERATE"`。
 
-失败任务会展示失败阶段与后端原因，停止后续阶段，结果链接为空。清除全局失败注入：在“演示设置”里选择“不注入失败”；API 等价于 `{"failStage": ""}`。失败是确定性的，不随机。
+失败任务会展示失败阶段与后端原因，停止后续阶段，结果链接为空。清除全局失败注入：在设置页选择“不注入失败”；API 等价于 `{"failStage": ""}`。失败是确定性的，不随机。
 
 ### 9.4 curl 快速演示
 
@@ -460,15 +479,13 @@ curl -c cookies.txt -H "Content-Type: application/json" \
 curl -b cookies.txt http://localhost:8080/api/categories
 curl -b cookies.txt http://localhost:8080/api/templates
 
-# 上传两张图片（替换为本地文件）
+# 上传一张图片（双图模板如 journey-pair 需上传两张）
 curl -b cookies.txt -F "templateId=travel-postcard" -F "file=@a.png" \
   http://localhost:8080/api/assets
-curl -b cookies.txt -F "templateId=travel-postcard" -F "file=@b.png" \
-  http://localhost:8080/api/assets
 
-# 用返回的两个 assetId 创建任务；可附加 simulation
+# 用返回的 assetId 创建任务；可附加 simulation
 curl -b cookies.txt -H "Content-Type: application/json" \
-  -d '{"templateId":"travel-postcard","assetIds":["<id1>","<id2>"],
+  -d '{"templateId":"travel-postcard","assetIds":["<asset-id>"],
        "simulation":{"generateDelayMs":3000,"failStage":"GENERATE"}}' \
   http://localhost:8080/api/tasks
 
@@ -543,7 +560,7 @@ CI 不需要 MySQL：后端测试为执行器单元测试，前端测试为纯 T
 - `mvn test`：7 个测试通过；
 - `mvn package`：生成可执行 jar；
 - `npm run lint` / `npm run typecheck` / `npm test` / `npm run build`：全部通过（5 个前端测试）；
-- 使用隔离的临时 MySQL 8.0.41 实例（127.0.0.1:3307）启动后端，验证：健康检查、会话、模板、上传、任务受理 `202`、三阶段可观察推进、成功结果 1200×1500 PNG、指定阶段失败、失败结果 404、终态查询不变、身份 A/B 隔离（跨用户任务 / 素材 404）、全局模拟设置与非法值 400、错误文件内容被拒绝、素材数量校验、服务重启后将 `RUNNING` 任务标记失败；
+- 使用隔离的临时 MySQL 8.0.41 实例（127.0.0.1:3307）启动后端，验证：健康检查、会话、模板、上传、任务受理 `202`、三阶段可观察推进、成功结果 1080×1920 PNG、指定阶段失败、失败结果 404、终态查询不变、身份 A/B 隔离（跨用户任务 / 素材 404）、全局模拟设置与非法值 400、错误文件内容被拒绝、素材数量校验、服务重启后将 `RUNNING` 任务标记失败；
 - 使用生产构建的前端 + Next rewrite 代理再次验证 Cookie 会话、历史与结果；
 - 使用 Headless Chrome 截图检查桌面与小屏布局，并通过 DevTools Protocol 实际切换身份、读取模拟设置，确认切换后历史清空、模拟设置显示正确。
 
